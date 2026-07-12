@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- ========== بطاقة تويتر كارد (Twitter Card) ========== -->
+    <meta name="twitter:card" content="player" />
+    <meta name="twitter:site" content="@YourTwitterHandle" />
+    <meta name="twitter:title" content=" " />
+    <meta name="twitter:description" content=" " />
+    <meta name="twitter:player" content="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&rel=0" />
+    <meta name="twitter:player:width" content="560" />
+    <meta name="twitter:player:height" content="315" />
+    <meta name="twitter:image" content="https://i.postimg.cc/L8LgKJRQ/08e39f23665cdf1e4e07e6db8c5099dd.jpg" />
+    <!-- ===================================================== -->
+
+    <title>معرض الصور - فيديو تويتر</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* كل تدوينة = بطاقة فيديو */
+        .post-card {
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+        }
+
+        .post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        /* حاوية الصورة - تشبه مشغل الفيديو */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* نسبة 16:9 */
+            background: #0a0a0a;
+            overflow: hidden;
+        }
+
+        .video-wrapper img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .post-card:hover .video-wrapper img {
+            transform: scale(1.02);
+        }
+
+        /* زر التشغيل - علامة الفيديو في المنتصف */
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.15), 0 8px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            pointer-events: none; /* لا تمنع النقر على البطاقة */
+        }
+
+        .play-button::after {
+            content: "▶";
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-left: 5px;
+            transition: transform 0.2s ease;
+        }
+
+        .post-card:hover .play-button {
+            transform: translate(-50%, -50%) scale(1.08);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 0 16px rgba(255, 255, 255, 0.2), 0 8px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .post-card:hover .play-button::after {
+            transform: scale(1.05);
+        }
+
+        /* تذييل التدوينة - فارغ كما طلبت */
+        .post-footer {
+            padding: 12px 16px;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .post-footer .badge {
+            background: #e8f5fe;
+            color: #1da1f2;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .post-footer .views {
+            color: #687684;
+            font-size: 13px;
+        }
+
+        /* تذييل الصفحة */
+        .page-footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px 20px;
+            color: #687684;
+            border-top: 1px solid #e1e8ed;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-footer a {
+            color: #1da1f2;
+            text-decoration: none;
+        }
+
+        .page-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .play-button {
+                width: 56px;
+                height: 56px;
+            }
+
+            .play-button::after {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="gallery">
+    <!-- ========================================================= -->
+    <!-- كل post-card تمثل تدوينة واحدة = صورة + زر تشغيل في المنتصف -->
+    <!-- ========================================================= -->
+
+    <!-- الصورة 1 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/L8LgKJRQ/08e39f23665cdf1e4e07e6db8c5099dd.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 2 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/DzhJ27y5/11a07513d750874ab24bc014d72b6593.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 3 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/SK42ymNg/15632f6e2e91e229c81b632c83789282.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 4 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/fbstwMTf/2428eab944dae7e801002ac050fbb137.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 5 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/tgbZX9Cr/3256ec41f9a03ee9ff1f8f56b2f3faa6.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 6 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/wBzy69Tb/35c62a7e5a1b11eec957f5b3632372cc.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 7 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/q7rhkpMY/3705d573bf09b215d9ccf79913bed27d.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 8 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/pdvh2PXS/40042e5d3f8beeba7ac1cb0a0136d38c.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 9 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/Jh8D1R4f/4b4323ff3087f109d26c7564df7dd416.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 10 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/k5C6n7g3/50610045c19a1851082a200a9759e5df.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 11 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/9f2RWcQc/7ff47bee15c30ce558bba09b87c198fe.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 12 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/fbstwMRw/bd58fa760b0134f432e71a390be15455.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 13 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/cJWgsdL4/bff36045ec905ae84a5c9ff0fa2092da.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 14 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/zfNbJqGG/cd134b33830ee9bd2b165826ebf82133.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 15 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/6Qh7qF8K/cdcb9857a0d4cdb41881813c8d2b1905.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 16 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/431KyjYs/e1c9559457d9fc388dff15c07031729b.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 17 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/d0973ghs/e4cd79df8171c4f29922a76336f7fa3f.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 18 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/s2JBxbMf/ea77a3e0eaa82fd310c3088e1e161d15.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+    <!-- الصورة 19 -->
+    <div class="post-card" onclick="window.location.href=this.dataset.url">
+        <div class="video-wrapper">
+            <img src="https://i.postimg.cc/VNFSv2Jk/eb4687f500bb8d002050ed7ee25cf48f.jpg" alt="فيديو" loading="lazy" />
+            <div class="play-button"></div>
+        </div>
+        <div class="post-footer">
+            <span class="badge">▶ فيديو</span>
+            <span class="views">🕒 0:00</span>
+        </div>
+    </div>
+
+</div>
+
+<!-- تذييل الصفحة -->
+<div class="page-footer">
+    <p>📱 عند نشر أي رابط من هذه الصور على تويتر، ستظهر كفيديو مع علامة تشغيل في المنتصف</p>
+    <p style="margin-top: 8px; font-size: 14px;">
+        🚀 مُنشأ على <a href="#">Vercel</a> · 
+        <span style="color: #1da1f2;">🐦 Twitter Card: player</span>
+    </p>
+</div>
+
+</body>
+      </html>
